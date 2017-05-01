@@ -1,0 +1,67 @@
+<style>
+	ul{list-style:none;}
+	.post-content{padding:5px; }
+	.post-comment{border:1px solid #efefef; font-size:12px; color:#222; margin-bottom:5px;}
+	.post-comment-text{padding:5px 10px;border:1px solid:#ddd;}
+	.post-comment-input{margin:5px;}
+	.post-comment-input textarea{resize:vertical;max-height:100px;}
+</style>
+<div class="post">
+	<h3>{{vm.post.title}}</h3>
+	<hr/>
+	<p class="small text-left post-author">By: {{vm.post.author}}</p>
+	<p class="post-content">{{vm.post.content}}</p>
+	<p>
+		<form name="addCommentForm" ng-submit="vm.addNewComment()">
+			<button type="button" ng-click = "vm.addCommentMode(true)" class="btn btn-xs btn-info">Add Comment</button>
+			<div class="form-group post-comment-input" ng-if="vm.addingNewComment">
+				<textarea id="newComment" class="input-sm form-control" placeholder="Add your comment here" name="newComment" ng-model = "vm.newComment"></textarea>
+			</div>
+			<p class="pull-right" ng-if="vm.addingNewComment">
+				<button type="submit" class="btn btn-xs btn-success">Submit</button>
+				<button type="button" ng-click="vm.addCommentMode(false)" class="btn btn-xs btn-warning">Discard</button>
+			</p>
+		</form>
+		<div class="clearfix"></div>
+	</p>
+	<ul>
+		<li class="post-comment" ng-repeat = "comment in vm.post.comments">
+			<!--Container for repeating posts, event listener corresponds to utility method passed down.-->
+			<div class="clearfix post-comment-text" ng-class="{'text-muted':comment.isBeingEdited}">
+			<form name="commentUpdateForm" ng-submit="vm.updateComment(comment.id)" id="commentUpdateForm" >
+				<p>
+					{{comment.content}}
+					<span class="small text-right text-info"><b>: Added by {{comment.author}}</b></span>
+				</p>
+				<div class="pull-right" ng-if="vm.commentUpdates[comment.id].isBeingEdited">
+					<button 
+						type="button"
+						ng-click = "vm.commentBeingEdited(comment.id, false)" 
+						class="btn btn-xs btn-warning">Discard
+					</button>
+					<button 
+						type="submit"
+						class="btn btn-xs btn-success">Submit
+					</button>
+				</div>
+				<div class="pull-right" ng-if="!vm.commentUpdates[comment.id].isBeingEdited">
+					<button 
+						type="button" 
+						ng-click = "vm.commentBeingEdited(comment.id, true, comment.content)" 
+						class="btn btn-xs btn-primary">Edit
+					</button>
+					<button 
+						type="button" 
+						ng-click = "vm.deleteComment(comment.id)"
+						class="btn btn-xs btn-danger">Delete
+					</button>
+				</div>	
+			</div>
+			<div class="form-group post-comment-input" ng-if="vm.commentUpdates[comment.id].isBeingEdited">
+				<textarea class="input-sm form-control" ng-model="vm.commentUpdates[comment.id]['data']" name="updatedComment" ng-required ></textarea>
+				<p class="alert-warning" ng-show="commentUpdateForm.updatedComment.$invalid">Please provide a comment.</p>
+			</div>
+			</form>
+		</li>
+	</ul>
+</div>
