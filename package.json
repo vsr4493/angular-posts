@@ -36,6 +36,6 @@
     "angular-sanitize": "^1.6.1",
     "angular-ui-bootstrap": "^2.5.0",
     "angular-ui-router": "^0.4.2",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.3.7"
   }
 }
